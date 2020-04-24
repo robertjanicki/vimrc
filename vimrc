@@ -2,57 +2,113 @@
 ""Robert""
 """"""""""
 
-"Automatic Plug installation script
+" Automatic Plug installation script
 if empty(glob('~/.vim/autoload/plug.vim'))
 	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
 				\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
-"Plug Plugins
+" ##PLUG PLUGINS##
 
 call plug#begin()
 
-""A:
-Plug 'jiangmiao/auto-pairs'
-Plug 'dense-analysis/ale'
+" #DISPLAY#
+" Vim Airline: Status/Tabline
+Plug 'vim-airline/vim-airline'
 
-""C:
-Plug 'rhysd/vim-clang-format'
-Plug 'universal-ctags/ctags'
+" Vim Airline Themes: Theme repository for Vim Airline
+Plug 'vim-airline/vim-airline-themes'
 
-""N:
+" #NAVIGATION#
+" NERD Tree: Tree file system explorer
 Plug 'scrooloose/nerdtree'
 
-""S:
-Plug 'tpope/vim-speeddating'
+" #PROGRAMMING UTILITIES#
+" Ale: Syntax checking
+Plug 'dense-analysis/ale'
 
-""T:
-Plug 'godlygeek/tabular'
-Plug 'majutsushi/tagbar' "Dependencies: ctags
+" Auto Pairs: Adds missing character pairs, e.g. {}, ()
+Plug 'jiangmiao/auto-pairs'
+
+" Tagbar: Class outline viewer. Dependencies: ctags
+Plug 'majutsushi/tagbar'
+
+" Tcomment: Comment toggling
 Plug 'tomtom/tcomment_vim'
 
-""Y:
+" Universal Ctags: Generates an index file of language objects
+Plug 'universal-ctags/ctags'
+
+" Vim Clang Format: Format C/C++ files according to Clang Format
+Plug 'rhysd/vim-clang-format'
+
+" You Complete Me: Code completion engine
 Plug 'valloric/youcompleteme'
+
+" #SEARCH#
+" Ack: Allows to use source code search tools like ack, ag or ripgrep in vim
+Plug 'mileszs/ack.vim'
+
+" #TEXT MANIPULATION#
+" Tabular: Text alignment tool
+Plug 'godlygeek/tabular'
+
+" Vim Speed Dating: Increment dates, roman numerals and cardinals
+Plug 'tpope/vim-speeddating'
 
 call plug#end()
 
-"Vim Configuration
+" ##VIM CONFIGURATION##
+" No preview
 set completeopt-=preview
-set nowrap
-set number
 
+" No line wrap
+set nowrap
+
+" Show line numbers
+set number relativenumber
+
+:augroup numbertoggle
+:  autocmd!
+:  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
+:  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
+:augroup END
+
+" Long text highlighting
+highlight LengthWarning ctermbg=216 ctermfg=white guibg=#592929
+"highlight LengthOver120 ctermbg=203 ctermfg=white guibg=#592929
+
+match LengthWarning /\%>79v./
+"match LengthOver80 /\%>79v.\%<120v/
+"match LengthOver120 /\%>120v./
+
+" Syntax highlighting
 syntax on
 
-"Plugin Configurations
+" Invisible characters
+set listchars=tab:▸\ ,eol:¬
+highlight NonText ctermfg=DarkGrey cterm=NONE guifg=#262626 gui=NONE
+highlight SpecialKey ctermfg=DarkGrey cterm=NONE guifg=#262626 gui=NONE
+set list
 
-""Clang Format
+" set list toggle
+nmap <leader>l :set list!<CR>
+
+" ##PLUGIN CONFIGURATIONS##
+
+" Ack
+if executable('rg')
+  let g:ackprg = 'rg --vimgrep'
+endif
+
+" Clang Format
 autocmd FileType c,cpp,objc,h,hpp ClangFormatAutoEnable
 autocmd FileType c,cpp,objc,h,hpp nnoremap <buffer><F4> :<C-u>ClangFormat<CR>
 autocmd FileType c,cpp,objc,h,hpp vnoremap <buffer><F4> :ClangFormat<CR>
 
-""NERD Tree
+" NERD Tree
 nmap <F2> :NERDTreeToggle<CR>
 
-""Tagbar
+" Tagbar
 nmap <F3> :TagbarToggle<CR>

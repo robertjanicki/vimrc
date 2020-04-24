@@ -1,5 +1,8 @@
-#Include only .gitignore and vimrc
+#Exclude
 *
-.*
+
+#Include
 !.gitignore
+!autoload/
+!autoload/*
 !vimrc
