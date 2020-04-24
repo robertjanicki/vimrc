@@ -1,6 +1,30 @@
 """"""""""
 ""Robert""
 """"""""""
+5
+" VIM and programming specific
+syntax on
+set nocompatible
+set nowrap
+set encoding=utf8
+set nobackup
+set noshowmode
+set nowritebackup
+set ruler
+let mapleader = "\\"
+
+" Let's save undo info!
+if !isdirectory($HOME."/.vim")
+    call mkdir($HOME."/.vim", "", 0770)
+endif
+if !isdirectory($HOME."/.vim/undo-dir")
+    call mkdir($HOME."/.vim/undo-dir", "", 0700)
+endif
+set undodir=~/.vim/undo-dir
+set undofile
+
+" Enabling ELITE MODE
+let g:elite_mode=1
 
 " Automatic Plug installation script
 if empty(glob('~/.vim/autoload/plug.vim'))
@@ -63,9 +87,6 @@ call plug#end()
 " No preview
 set completeopt-=preview
 
-" No line wrap
-set nowrap
-
 " Show line numbers
 set number relativenumber
 
@@ -75,16 +96,9 @@ set number relativenumber
 :  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
 :augroup END
 
-" Long text highlighting
-highlight LengthWarning ctermbg=216 ctermfg=white guibg=#592929
-"highlight LengthOver120 ctermbg=203 ctermfg=white guibg=#592929
-
-match LengthWarning /\%>79v./
-"match LengthOver80 /\%>79v.\%<120v/
-"match LengthOver120 /\%>120v./
-
-" Syntax highlighting
-syntax on
+" Column highlighting
+set colorcolumn=80,120
+highlight ColorColumn ctermbg=235
 
 " Invisible characters
 set listchars=tab:▸\ ,eol:¬
@@ -112,3 +126,11 @@ nmap <F2> :NERDTreeToggle<CR>
 
 " Tagbar
 nmap <F3> :TagbarToggle<CR>
+
+" ELITE MODE
+if get(g:, 'elite_mode')
+        nnoremap <Up>    :resize +2<CR>
+        nnoremap <Down>  :resize -2<CR>
+        nnoremap <Left>  :vertical resize +2<CR>
+        nnoremap <Right> :vertical resize -2<CR>
+endif
